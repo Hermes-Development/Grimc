@@ -2,8 +2,7 @@ package ac.grim.grimac.manager;
 
 
 import ac.grim.grimac.api.AbstractCheck;
-import ac.grim.grimac.checks.impl.aim.AimDuplicateLook;
-import ac.grim.grimac.checks.impl.aim.AimModulo360;
+import ac.grim.grimac.checks.impl.aim.*;
 import ac.grim.grimac.checks.impl.aim.processor.AimProcessor;
 import ac.grim.grimac.checks.impl.badpackets.*;
 import ac.grim.grimac.checks.impl.baritone.Baritone;
@@ -12,6 +11,7 @@ import ac.grim.grimac.checks.impl.crash.*;
 import ac.grim.grimac.checks.impl.exploit.ExploitA;
 import ac.grim.grimac.checks.impl.exploit.ExploitB;
 import ac.grim.grimac.checks.impl.groundspoof.NoFallA;
+import ac.grim.grimac.checks.impl.killaura.KillauraAccuracy;
 import ac.grim.grimac.checks.impl.misc.ClientBrand;
 import ac.grim.grimac.checks.impl.misc.FastBreak;
 import ac.grim.grimac.checks.impl.misc.GhostBlockMitigation;
@@ -59,6 +59,7 @@ public class CheckManager {
         // Include post checks in the packet check too
         packetChecks = new ImmutableClassToInstanceMap.Builder<PacketCheck>()
                 .put(Reach.class, new Reach(player))
+                .put(KillauraAccuracy.class, new KillauraAccuracy(player))
                 .put(PacketEntityReplication.class, new PacketEntityReplication(player))
                 .put(PacketChangeGameState.class, new PacketChangeGameState(player))
                 .put(CompensatedInventory.class, new CompensatedInventory(player))
@@ -107,6 +108,16 @@ public class CheckManager {
                 .put(AimModulo360.class, new AimModulo360(player))
                 .put(AimDuplicateLook.class, new AimDuplicateLook(player))
                 .put(Baritone.class, new Baritone(player))
+                .put(AimConstant.class, new AimConstant(player))
+                .put(AimConstantX.class, new AimConstantX(player))
+                .put(AimConstantY.class, new AimConstantY(player))
+                .put(AimDivisorX.class, new AimDivisorX(player))
+                .put(AimDivisorY.class, new AimDivisorY(player))
+                .put(AimStaticX.class, new AimStaticX(player))
+                .put(AimStaticY.class, new AimStaticY(player))
+                .put(AimInvalidSensitivity.class, new AimInvalidSensitivity(player))
+                .put(AimInvalidMode.class, new AimInvalidMode(player))
+                .put(AimSensitivityDifference.class, new AimSensitivityDifference(player))
                 .build();
         vehicleCheck = new ImmutableClassToInstanceMap.Builder<VehicleCheck>()
                 .put(VehiclePredictionRunner.class, new VehiclePredictionRunner(player))
