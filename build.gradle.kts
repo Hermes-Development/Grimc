@@ -8,7 +8,7 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
-group = "ac.grim.grimac"
+group = "ac.grim.grimcac"
 version = "2.3.66"
 description = "Libre simulation anticheat designed for 1.20 with 1.8-1.20 support, powered by PacketEvents 2.0."
 java.sourceCompatibility = JavaVersion.VERSION_1_8
@@ -48,7 +48,8 @@ dependencies {
 }
 
 bukkit {
-    name = "GrimAC"
+    name = "GrIMCAC"
+    provides = listOf("GrimAC")
     author = "GrimAC"
     main = "ac.grim.grimac.GrimAC"
     apiVersion = "1.13"

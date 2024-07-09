@@ -230,6 +230,17 @@ KillauraAccuracy:
   minDistance: 0.7
   maxCombatDuration: 10
   minAverageTargetMovement: 0.3
+  blockingCheck: true
+
+AimZeroDelta:
+  flagVL: 5.0
+
+AimRotation:
+  flagVL: 5.0
+
+AimGcd:
+  flagThresholdP: 8.0
+  flagThresholdY: 4.0
 
 # 启用在加入时注入 netty 的日志插件以调试兼容性问题
 debug-pipeline-on-join: false

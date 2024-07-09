@@ -3,14 +3,20 @@ package ac.grim.grimac.checks.impl.killaura;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
+import ac.grim.grimac.checks.type.PositionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.BetterStream;
+import ac.grim.grimac.utils.anticheat.update.PositionUpdate;
 import ac.grim.grimac.utils.data.packetentity.PacketEntity;
 import ac.grim.grimac.utils.lists.EvictingQueue;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import io.github.retrooper.packetevents.util.protocolsupport.ProtocolSupportUtil;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -18,7 +24,7 @@ import java.util.List;
 
 
 @CheckData(name = "KillauraAccuracy")
-public class KillauraAccuracy extends Check implements PacketCheck {
+public class KillauraAccuracy extends Check implements PacketCheck, PositionCheck {
     private int maxAccuracy;
     private int sampleSize;
     private double minDistance;
@@ -28,6 +34,8 @@ public class KillauraAccuracy extends Check implements PacketCheck {
     private int lastAttack = 0;
     private int maxCombatDuration;
     private double minAverageTargetMovement;
+
+    private boolean blockingCheck;
     private PacketEntity lastTarget = null;
 
     public KillauraAccuracy(GrimPlayer player) {
@@ -61,6 +69,12 @@ public class KillauraAccuracy extends Check implements PacketCheck {
                     flagAndAlert("accuracy=" + accuracy);
                 }
             }
+            if (blockingCheck && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) {
+                if (player.isBlocking()) {
+                    flagAndAlert("blocking=true");
+                    event.setCancelled(true);
+                }
+            }
             //Add this after the check bc the hit will be added after the arm animation packet and we dont want new positions and old hits
             //Adding the max or min doesn't matter but there is nothing like .getPosition
             positionList.add(target.getPossibleCollisionBoxes().max());
@@ -72,6 +86,11 @@ public class KillauraAccuracy extends Check implements PacketCheck {
             hit = false; //set the current hit to false
         }
 
+
+    }
+
+    @Override
+    public void onPositionUpdate(PositionUpdate positionUpdate) {
 
     }
 
@@ -105,6 +124,7 @@ public class KillauraAccuracy extends Check implements PacketCheck {
         this.minDistance = getConfig().getDoubleElse(getConfigName() + ".minDistance", 0.7);
         this.maxCombatDuration = getConfig().getIntElse(getConfigName() + ".maxCombatDuration", 10);
         this.minAverageTargetMovement = getConfig().getDoubleElse(getConfigName() + ".minAverageTargetMovement", 0.3);
+        this.blockingCheck = getConfig().getBooleanElse(getConfigName() + ".blockingCheck", true);
         hitList = new EvictingQueue<>(sampleSize);
         positionList = new EvictingQueue<>(sampleSize);
     }
