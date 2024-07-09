@@ -29,7 +29,7 @@ public class AimGcd extends Check implements RotationCheck, PositionCheck {
         HeadRotation from = update.getFrom();
         float pitch = Math.abs(to.getPitch() - from.getPitch());
         float yaw = Math.abs(to.getYaw() - from.getYaw());
-        if (!this.player.packetStateData.lastPacketWasTeleport && !this.player.isRiptidePose && (this.player.compensatedEntities.serverPlayerVehicle != null) && this.player.getHorizontalSensitivity() < 150) {
+        if (!this.player.packetStateData.lastPacketWasTeleport && !this.player.isRiptidePose && (this.player.compensatedEntities.serverPlayerVehicle == null) && this.player.getHorizontalSensitivity() < 150) {
             double gcdP = GrimMath.gcd(pitch, this.pitch);
             double gcdY = GrimMath.gcd(yaw, this.yaw);
             if (gcdP > 0.7 && ((double)pitch % this.pitch == 0.0 || Double.isNaN((double)pitch % this.pitch)) && pitch <= 10.0F) {
